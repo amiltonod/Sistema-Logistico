@@ -97,11 +97,24 @@ while True:
             for indice, coleta in enumerate(coletas, start=1):
                 print(f"{indice} - {coleta['cliente']}")
 
-            indice_remover = int(input("\nDigite o número da coleta: ")) - 1
+            try:
 
-            coleta_removida = coletas.pop(indice_remover)
+                indice_remover = int(input("\nDigite o número da coleta: ")) - 1
 
-            print(f"\n✅ Coleta do cliente {coleta_removida['cliente']} removida com sucesso!")
+                coleta_removida = coletas.pop(indice_remover)
+
+                salvar_coletas()
+
+                print(f"\n✅ Coleta do cliente {coleta_removida['cliente']} removida com sucesso!")
+
+            except ValueError:
+
+                print("\n❌ Digite apenas números.")
+
+            except IndexError:
+
+                print("\n❌ Coleta inexistente.")
+
 
     # SAIR
     elif opcao == "4":
