@@ -13,13 +13,23 @@ print("===================================")
 print(" SISTEMA DE PROGRAMAÇÃO LOGÍSTICA ")
 print("===================================")
 
-while True:
+def mostrar_menu():
 
     print("\nMENU")
     print("1 - Cadastrar coleta")
     print("2 - Ver programação")
     print("3 - Remover coleta")
     print("4 - Sair")
+
+def salvar_coletas():
+
+    with open("coletas.json", "w", encoding="utf-8") as arquivos:
+        json.dump(coletas, arquivos, ensure_ascii=False, indent=4)
+
+while True:
+
+    mostrar_menu()
+
 
     opcao = input("Escolha uma opção: ")
 
@@ -45,9 +55,6 @@ while True:
         }
 
         coletas.append(coleta)
-
-        with open("coletas.json", "w", encoding="utf-8") as arquivo:
-            json.dump(coletas, arquivo, ensure_ascii=False, indent=4)
 
         print("\n✅ Coleta cadastrada com sucesso!")
 
@@ -93,9 +100,6 @@ while True:
             indice_remover = int(input("\nDigite o número da coleta: ")) - 1
 
             coleta_removida = coletas.pop(indice_remover)
-
-            with open("coletas.json", "w", encoding="utf-8") as arquivo:
-                json.dump(coletas, arquivo, ensure_ascii=False, indent=4)
 
             print(f"\n✅ Coleta do cliente {coleta_removida['cliente']} removida com sucesso!")
 
