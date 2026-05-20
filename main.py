@@ -19,12 +19,53 @@ def mostrar_menu():
     print("1 - Cadastrar coleta")
     print("2 - Ver programação")
     print("3 - Remover coleta")
-    print("4 - Sair")
+    print("4 - Editar coleta")
+    print("5 - Sair")
 
 def salvar_coletas():
 
     with open("coletas.json", "w", encoding="utf-8") as arquivos:
         json.dump(coletas, arquivos, ensure_ascii=False, indent=4)
+
+def editar_coleta():
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    print("\n===== EDITAR COLETA =====")
+
+    for indice_coleta, coleta_atual in enumerate(coletas, start=1):
+
+        print(f"{indice_coleta} - {coleta_atual['cliente']}")
+
+    try:
+
+        indice_editar = int(input("\nDigite o número da coleta: ")) - 1
+
+        coleta_atual = coletas[indice_editar]
+
+        print("\nDigite os novos dados:")
+
+        coleta_atual["cliente"] = input("Cliente: ")
+        coleta_atual["motorista"] = input("Motorista: ")
+        coleta_atual["placa"] = input("Placa: ")
+        coleta_atual["veiculo"] = input("Veículo: ")
+        coleta_atual["prioridade"] = input("Prioridade: ")
+        coleta_atual["horario"] = input("Horário: ")
+
+        salvar_coletas()
+
+        print("\n✅ Coleta atualizada com sucesso!")
+
+    except ValueError:
+
+        print("\n❌ Digite apenas números.")
+
+    except IndexError:
+
+        print("\n❌ Coleta inexistente.")
 
 while True:
 
@@ -40,7 +81,6 @@ while True:
         motorista = input("Motorista: ")
         placa = input("Placa: ")
         veiculo = input("Veículo: ")
-        rota = input("Rota: ")
         prioridade = input("Prioridade: ")
         horario = input("Horário: ")
 
@@ -49,7 +89,6 @@ while True:
             "motorista": motorista,
             "placa": placa,
             "veiculo": veiculo,
-            "rota": rota,
             "prioridade": prioridade,
             "horario": horario
         }
@@ -77,7 +116,6 @@ while True:
                 print(f"Placa: {coleta['placa']}")
                 print(f"Veículo: {coleta['veiculo']}")
                 print(f"Motorista: {coleta['motorista']}")
-                print(f"Rota: {coleta['rota']}")
                 print(f"Prioridade: {coleta ['prioridade']}")
                 print(f"Horário: {coleta['horario']}")
 
@@ -115,9 +153,12 @@ while True:
 
                 print("\n❌ Coleta inexistente.")
 
+    elif opcao == "4":
+
+        editar_coleta()
 
     # SAIR
-    elif opcao == "4":
+    elif opcao == "5":
 
         print("\nSistema encerrado.")
         break
