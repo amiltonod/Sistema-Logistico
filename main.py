@@ -29,8 +29,8 @@ def mostrar_menu():
 
 def salvar_coletas():
 
-    with open("coletas.json", "w", encoding="utf-8") as arquivos:
-        json.dump(coletas, arquivos, ensure_ascii=False, indent=4)
+    with open("coletas.json", "w", encoding="utf-8") as arquivo_salvo:
+        json.dump(coletas, arquivo_salvo, ensure_ascii=False, indent=4)
 
 # EDITAR AS COLETAS
 
@@ -138,6 +138,8 @@ while True:
         }
 
         coletas.append(coleta)
+
+        salvar_coletas()
 
         print("\n✅ Coleta cadastrada com sucesso!")
 
