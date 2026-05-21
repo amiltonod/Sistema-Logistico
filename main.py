@@ -13,6 +13,8 @@ print("===================================")
 print(" SISTEMA DE PROGRAMAÇÃO LOGÍSTICA ")
 print("===================================")
 
+# MENU
+
 def mostrar_menu():
 
     print("\nMENU")
@@ -20,12 +22,17 @@ def mostrar_menu():
     print("2 - Ver programação")
     print("3 - Remover coleta")
     print("4 - Editar coleta")
-    print("5 - Sair")
+    print("5 - Buscar coleta")
+    print("6 - Sair")
+
+# SALVAR AS COLETAS
 
 def salvar_coletas():
 
     with open("coletas.json", "w", encoding="utf-8") as arquivos:
         json.dump(coletas, arquivos, ensure_ascii=False, indent=4)
+
+# EDITAR AS COLETAS
 
 def editar_coleta():
 
@@ -66,6 +73,43 @@ def editar_coleta():
     except IndexError:
 
         print("\n❌ Coleta inexistente.")
+
+# BUSCAR AS COLETAS
+
+def buscar_coleta():
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    busca = input("\nDigite o nome do cliente: ").lower()
+
+    encontrada = False
+
+    print("\n===== RESULTADO DA BUSCA =====")
+
+    for indice_coleta, coleta_atual in enumerate(coletas, start=1):
+
+        nome_cliente = coleta_atual["cliente"].lower()
+
+        if busca in nome_cliente:
+
+            encontrada = True
+
+            print(f"\n===== COLETA {indice_coleta} =====")
+            print("----------------------")
+            print(f"Cliente: {coleta_atual['cliente']}")
+            print(f"Motorista: {coleta_atual['motorista']}")
+            print(f"Placa: {coleta_atual['placa']}")
+            print(f"Veículo: {coleta_atual['veiculo']}")
+            print(f"Prioridade: {coleta_atual['prioridade']}")
+            print(f"Horário: {coleta_atual['horario']}")
+
+    if not encontrada:
+
+        print("\n❌ Nenhuma coleta encontrada.")
+
 
 while True:
 
@@ -153,12 +197,20 @@ while True:
 
                 print("\n❌ Coleta inexistente.")
 
+    # EDITAR COLETA
+
     elif opcao == "4":
 
         editar_coleta()
 
-    # SAIR
+    # BUSCAR COLETA
+
     elif opcao == "5":
+
+        buscar_coleta()
+
+    # SAIR
+    elif opcao == "6":
 
         print("\nSistema encerrado.")
         break
