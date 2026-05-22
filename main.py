@@ -23,7 +23,8 @@ def mostrar_menu():
     print("3 - Remover coleta")
     print("4 - Editar coleta")
     print("5 - Buscar coleta")
-    print("6 - Sair")
+    print("6 - Estatísticas")
+    print("7 - Sair")
 
 # SALVAR AS COLETAS
 
@@ -109,6 +110,40 @@ def buscar_coleta():
     if not encontrada:
 
         print("\n❌ Nenhuma coleta encontrada.")
+
+# ESTATISTICA
+
+def mostrar_estatisticas():
+    if len(coletas) == 0:
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    alta = 0
+    media = 0
+    baixa = 0
+
+    for coleta_nova in coletas:
+
+        prioridade_contagem = coleta_nova["prioridade"].lower()
+
+        if prioridade_contagem == "alta":
+
+            alta += 1
+
+        elif prioridade_contagem == "media":
+
+            media += 1
+
+        elif prioridade_contagem == "baixa":
+
+            baixa += 1
+
+    print("\n===== ESTATÍSTICAS =====")
+
+    print(f"\nTotal de coletas: {len(coletas)}")
+    print(f"Prioridade Alta: {alta}")
+    print(f"Prioridade Média: {media}")
+    print(f"Prioridade Baixa: {baixa}")
 
 
 while True:
@@ -211,8 +246,15 @@ while True:
 
         buscar_coleta()
 
-    # SAIR
+    # ESTATISTICAS
+
     elif opcao == "6":
+
+        mostrar_estatisticas()
+
+    # SAIR
+
+    elif opcao == "7":
 
         print("\nSistema encerrado.")
         break
