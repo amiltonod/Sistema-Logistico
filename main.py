@@ -1,4 +1,4 @@
-from coletas import menu_coletas
+from coletas import menu_coleta
 
 from fornecedores import menu_fornecedor
 
@@ -19,7 +19,7 @@ while True:
 
     if opcao == "1":
 
-        menu_coletas()
+        menu_coleta()
 
     elif opcao == "2":
 

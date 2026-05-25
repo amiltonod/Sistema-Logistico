@@ -280,7 +280,7 @@ def mostrar_estatisticas():
 
         elif prioridade_contagem == "baixa":
 
-            baixa += 1
+            baixa += 11
 
     print("\n===== ESTATÍSTICAS =====")
 
@@ -288,3 +288,42 @@ def mostrar_estatisticas():
     print(f"Prioridade Alta: {alta}")
     print(f"Prioridade Média: {media}")
     print(f"Prioridade Baixa: {baixa}")
+
+def menu_coleta():
+
+    while True:
+
+        print("\n===== COLETAS =====")
+        print("1 - Cadastrar coleta")
+        print("2 - Ver programação")
+        print("3 - Remover coleta")
+        print("4 - Editar coleta")
+        print("5 - Buscar coleta")
+        print("6 - Estatísticas")
+        print("7 - Voltar")
+
+        opcao = input("Escolha: ")
+
+        if opcao == "1":
+            cadastrar_coleta()
+
+        elif opcao == "2":
+            listar_coletas()
+
+        elif opcao == "3":
+            remover_coleta()
+
+        elif opcao == "4":
+            editar_coleta()
+
+        elif opcao == "5":
+            buscar_coleta()
+
+        elif opcao == "6":
+            mostrar_estatisticas()
+
+        elif opcao == "7":
+            break
+
+        else:
+            print("Opção inválida")
