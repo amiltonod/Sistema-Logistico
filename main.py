@@ -1,5 +1,27 @@
 import json
 
+import sqlite3
+
+conexao = sqlite3.connect("logistica.db")
+
+cursor = conexao.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS coletas (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cliente TEXT,
+    motorista TEXT,
+    placa TEXT,
+    veiculo TEXT,
+    prioridade TEXT,
+    horario TEXT
+
+)
+""")
+
+conexao.commit()
+
 try:
 
     with open("coletas.json", "r", encoding="utf-8") as arquivo:
@@ -160,7 +182,33 @@ while True:
         motorista = input("Motorista: ")
         placa = input("Placa: ")
         veiculo = input("Veículo: ")
-        prioridade = input("Prioridade: ")
+        while True:
+
+            print("\nPrioridade:")
+            print("1 - Alta")
+            print("2 - Média")
+            print("3 - Baixa")
+
+            opcao_prioridade = input("Escolha a prioridade: ")
+
+            if opcao_prioridade == "1":
+
+                prioridade = "alta"
+                break
+
+            elif opcao_prioridade == "2":
+
+                prioridade = "media"
+                break
+
+            elif opcao_prioridade == "3":
+
+                prioridade = "baixa"
+                break
+
+            else:
+
+                print("\n❌ Opção inválida.")
         horario = input("Horário: ")
 
         coleta = {
