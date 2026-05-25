@@ -1,5 +1,24 @@
+import requests
+
+from typing import Optional
+
 from database import conexao, cursor
 
+def consultar_cnpj(cnpj) -> Optional[dict]:
+
+    cnpj = cnpj.replace(".", "")
+    cnpj = cnpj.replace("/", "")
+    cnpj = cnpj.replace("-", "")
+
+    url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
+
+    resposta = requests.get(url)
+
+    if resposta.status_code == 200:
+
+        return resposta.json()
+
+    return None
 
 def menu_fornecedor():
 
@@ -8,7 +27,12 @@ def menu_fornecedor():
         print("\n===== FORNECEDORES =====")
         print("1 - Cadastrar fornecedor")
         print("2 - Listar fornecedores")
-        print("3 - Voltar")
+        print("3 - Editar fornecedor")
+        print("4 - Buscar fornecedor")
+        print("5 - Remover fornecedor")
+        print("6 - Voltar")
+
+
 
         opcao_fornecedor = input("Escolha uma opção: ")
 
@@ -22,6 +46,18 @@ def menu_fornecedor():
 
         elif opcao_fornecedor == "3":
 
+            editar_fornecedor()
+
+        elif opcao_fornecedor == "4":
+
+            buscar_fornecedor()
+
+        elif opcao_fornecedor == "5":
+
+            remover_fornecedor()
+
+        elif opcao_fornecedor == "6":
+
             break
 
         else:
@@ -34,8 +70,29 @@ def cadastrar_fornecedor():
     print("\n===== CADASTRAR FORNECEDOR =====")
 
     cnpj = input("CNPJ: ")
-    nome = input("Nome: ")
-    endereco = input("Endereço: ")
+
+    dados = consultar_cnpj(cnpj)
+
+    if dados is not None:
+
+        nome = dados["razao_social"]
+
+        endereco = (
+            f"{dados['logradouro']}, "
+            f"{dados['numero']} - "
+            f"{dados['municipio']}/{dados['uf']}"
+        )
+
+        print(f"\nEmpresa encontrada: {nome}")
+        print(f"Endereço: {endereco}")
+
+    else:
+
+        print("\n❌ CNPJ não encontrado.")
+
+        nome = input("Nome: ")
+        endereco = input("Endereço: ")
+
     telefone = input("Telefone: ")
 
     cursor.execute("""
@@ -83,3 +140,151 @@ def listar_fornecedores():
         print(f"Nome: {fornecedor[2]}")
         print(f"Endereço: {fornecedor[3]}")
         print(f"Telefone: {fornecedor[4]}")
+
+def editar_fornecedor():
+
+    print("\n===== EDITAR FORNECEDOR =====")
+
+    cursor.execute("SELECT * FROM fornecedores")
+
+    fornecedores = cursor.fetchall()
+
+    if len(fornecedores) == 0:
+
+        print("\n❌ Nenhum fornecedor cadastrado.")
+        return
+
+    for fornecedor in fornecedores:
+
+        print(f"{fornecedor[0]} - {fornecedor[2]}")
+
+    try:
+
+        id_fornecedor = int(input("\nDigite o ID do fornecedor: "))
+
+        cursor.execute("""
+
+        SELECT * FROM fornecedores
+        WHERE id = ?
+
+        """, (id_fornecedor,))
+
+        fornecedor = cursor.fetchone()
+
+        if fornecedor is None:
+
+            print("\n❌ Fornecedor não encontrado.")
+            return
+
+        novo_nome = input("Novo nome: ")
+        novo_endereco = input("Novo endereço: ")
+        novo_telefone = input("Novo telefone: ")
+
+        cursor.execute("""
+
+        UPDATE fornecedores
+
+        SET
+            nome = ?,
+            endereco = ?,
+            telefone = ?
+
+        WHERE id = ?
+
+        """, (
+
+            novo_nome,
+            novo_endereco,
+            novo_telefone,
+            id_fornecedor
+
+        ))
+
+        conexao.commit()
+
+        print("\n✅ Fornecedor atualizado com sucesso!")
+
+    except ValueError:
+
+        print("\n❌ Digite apenas números.")
+
+def buscar_fornecedor():
+
+    print("\n===== BUSCAR FORNECEDOR =====")
+
+    busca = input("Digite o nome do fornecedor: ")
+
+    cursor.execute("""
+
+    SELECT * FROM fornecedores
+
+    WHERE nome LIKE ?
+
+    """, (f"%{busca}%",))
+
+    fornecedores = cursor.fetchall()
+
+    if len(fornecedores) == 0:
+
+        print("\n❌ Nenhum fornecedor encontrado.")
+        return
+
+    for fornecedor in fornecedores:
+
+        print(f"\nID: {fornecedor[0]}")
+        print(f"CNPJ: {fornecedor[1]}")
+        print(f"Nome: {fornecedor[2]}")
+        print(f"Endereço: {fornecedor[3]}")
+        print(f"Telefone: {fornecedor[4]}")
+
+def remover_fornecedor():
+
+    print("\n===== REMOVER FORNECEDOR =====")
+
+    cursor.execute("SELECT * FROM fornecedores")
+
+    fornecedores = cursor.fetchall()
+
+    if len(fornecedores) == 0:
+
+        print("\n❌ Nenhum fornecedor cadastrado.")
+        return
+
+    for fornecedor in fornecedores:
+
+        print(f"{fornecedor[0]} - {fornecedor[2]}")
+
+    try:
+
+        id_fornecedor = int(input("\nDigite o ID do fornecedor: "))
+
+        cursor.execute("""
+
+        SELECT * FROM fornecedores
+
+        WHERE id = ?
+
+        """, (id_fornecedor,))
+
+        fornecedor = cursor.fetchone()
+
+        if fornecedor is None:
+
+            print("\n❌ Fornecedor não encontrado.")
+            return
+
+        cursor.execute("""
+
+        DELETE FROM fornecedores
+
+        WHERE id = ?
+
+        """, (id_fornecedor,))
+
+        conexao.commit()
+
+        print("\n✅ Fornecedor removido com sucesso!")
+
+    except ValueError:
+
+        print("\n❌ Digite apenas números.")
