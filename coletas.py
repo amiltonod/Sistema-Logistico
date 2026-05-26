@@ -1,44 +1,36 @@
-import json
-
 from database import conexao, cursor
 
-try:
 
-    with open("coletas.json", "r", encoding="utf-8") as arquivo:
-        coletas = json.load(arquivo)
+# =========================
+# FUNÇÕES AUXILIARES
+# =========================
 
-except FileNotFoundError:
+def obter_coletas():
 
-    coletas = []
+    cursor.execute("SELECT * FROM coletas")
 
-
-# SALVAR AS COLETAS
-
-def salvar_coletas():
-
-    with open("coletas.json", "w", encoding="utf-8") as arquivo_salvo:
-        json.dump(coletas, arquivo_salvo, ensure_ascii=False, indent=4)
-
-def menu_coletas():
-
-    print("\n===== COLETAS =====")
-    print("1 - Cadastrar coleta")
-    print("2 - Ver programação")
-    print("3 - Remover coleta")
-    print("4 - Editar coleta")
-    print("5 - Buscar coleta")
-    print("6 - Estatísticas")
-    print("7 - Sair")
+    return cursor.fetchall()
 
 
-# CADASTRAR COLETA
+def exibir_coleta(coleta):
 
-def cadastrar_coleta():
+    print(f"\n===== COLETA ID {coleta[0]} =====")
+    print("----------------------")
+    print(f"Cliente: {coleta[1]}")
+    print(f"Motorista: {coleta[2]}")
+    print(f"Placa: {coleta[3]}")
+    print(f"Veículo: {coleta[4]}")
+    print(f"Prioridade: {coleta[5]}")
+    print(f"Horário: {coleta[6]}")
 
-    cliente = input("Cliente: ")
-    motorista = input("Motorista: ")
-    placa = input("Placa: ")
-    veiculo = input("Veículo: ")
+
+def listar_ids_coletas(coletas):
+
+    for coleta in coletas:
+
+        print(f"{coleta[0]} - {coleta[1]}")
+
+def obter_prioridade():
 
     while True:
 
@@ -51,243 +43,24 @@ def cadastrar_coleta():
 
         if opcao_prioridade == "1":
 
-            prioridade = "alta"
-            break
+            return "alta"
 
         elif opcao_prioridade == "2":
 
-            prioridade = "media"
-            break
+            return "media"
 
         elif opcao_prioridade == "3":
 
-            prioridade = "baixa"
-            break
+            return "baixa"
 
         else:
 
             print("\n❌ Opção inválida.")
 
-    horario = input("Horário: ")
 
-    coleta = {
-        "cliente": cliente,
-        "motorista": motorista,
-        "placa": placa,
-        "veiculo": veiculo,
-        "prioridade": prioridade,
-        "horario": horario
-    }
-
-    coletas.append(coleta)
-
-    cursor.execute("""
-
-                   INSERT INTO coletas (
-                        cliente,
-                        motorista,
-                        placa,
-                        veiculo,
-                        prioridade,
-                        horario
-                   )
-
-                   VALUES (?, ?, ?, ?, ?, ?)
-
-                   """, (
-
-                       cliente,
-                       motorista,
-                       placa,
-                       veiculo,
-                       prioridade,
-                       horario
-
-                   ))
-
-    conexao.commit()
-
-    salvar_coletas()
-
-    print("\n✅ Coleta cadastrada com sucesso!")
-
-
-# LISTAR COLETAS
-
-def listar_coletas():
-
-    print("\n===== PROGRAMAÇÃO =====")
-
-    if len(coletas) == 0:
-
-        print("Nenhuma coleta cadastrada.")
-
-    else:
-
-        print(f"\nTotal de coletas: {len(coletas)}")
-
-        for indice_coleta, coleta_atual in enumerate(coletas, start=1):
-
-            print(f"\n===== COLETA {indice_coleta} =====")
-            print("----------------------")
-            print(f"Cliente: {coleta_atual['cliente']}")
-            print(f"Placa: {coleta_atual['placa']}")
-            print(f"Veículo: {coleta_atual['veiculo']}")
-            print(f"Motorista: {coleta_atual['motorista']}")
-            print(f"Prioridade: {coleta_atual['prioridade']}")
-            print(f"Horário: {coleta_atual['horario']}")
-
-
-# REMOVER COLETA
-
-def remover_coleta():
-
-    if len(coletas) == 0:
-
-        print("\n❌ Nenhuma coleta cadastrada.")
-
-    else:
-
-        print("\n===== REMOVER COLETA =====")
-
-        for indice_coleta, coleta_atual in enumerate(coletas, start=1):
-
-            print(f"{indice_coleta} - {coleta_atual['cliente']}")
-
-        try:
-
-            indice_remover = int(input("\nDigite o número da coleta: ")) - 1
-
-            coleta_removida = coletas.pop(indice_remover)
-
-            salvar_coletas()
-
-            print(f"\n✅ Coleta do cliente {coleta_removida['cliente']} removida com sucesso!")
-
-        except ValueError:
-
-            print("\n❌ Digite apenas números.")
-
-        except IndexError:
-
-            print("\n❌ Coleta inexistente.")
-
-
-# EDITAR COLETA
-
-def editar_coleta():
-
-    if len(coletas) == 0:
-
-        print("\n❌ Nenhuma coleta cadastrada.")
-        return
-
-    print("\n===== EDITAR COLETA =====")
-
-    for indice_coleta, coleta_atual in enumerate(coletas, start=1):
-
-        print(f"{indice_coleta} - {coleta_atual['cliente']}")
-
-    try:
-
-        indice_editar = int(input("\nDigite o número da coleta: ")) - 1
-
-        coleta_atual = coletas[indice_editar]
-
-        print("\nDigite os novos dados:")
-
-        coleta_atual["cliente"] = input("Cliente: ")
-        coleta_atual["motorista"] = input("Motorista: ")
-        coleta_atual["placa"] = input("Placa: ")
-        coleta_atual["veiculo"] = input("Veículo: ")
-        coleta_atual["prioridade"] = input("Prioridade: ")
-        coleta_atual["horario"] = input("Horário: ")
-
-        salvar_coletas()
-
-        print("\n✅ Coleta atualizada com sucesso!")
-
-    except ValueError:
-
-        print("\n❌ Digite apenas números.")
-
-    except IndexError:
-
-        print("\n❌ Coleta inexistente.")
-
-
-# BUSCAR COLETA
-
-def buscar_coleta():
-
-    if len(coletas) == 0:
-
-        print("\n❌ Nenhuma coleta cadastrada.")
-        return
-
-    busca = input("\nDigite o nome do cliente: ").lower()
-
-    encontrada = False
-
-    print("\n===== RESULTADO DA BUSCA =====")
-
-    for indice_coleta, coleta_atual in enumerate(coletas, start=1):
-
-        nome_cliente = coleta_atual["cliente"].lower()
-
-        if busca in nome_cliente:
-
-            encontrada = True
-
-            print(f"\n===== COLETA {indice_coleta} =====")
-            print("----------------------")
-            print(f"Cliente: {coleta_atual['cliente']}")
-            print(f"Motorista: {coleta_atual['motorista']}")
-            print(f"Placa: {coleta_atual['placa']}")
-            print(f"Veículo: {coleta_atual['veiculo']}")
-            print(f"Prioridade: {coleta_atual['prioridade']}")
-            print(f"Horário: {coleta_atual['horario']}")
-
-    if not encontrada:
-
-        print("\n❌ Nenhuma coleta encontrada.")
-
-
-# ESTATÍSTICAS
-
-def mostrar_estatisticas():
-
-    if len(coletas) == 0:
-
-        print("\n❌ Nenhuma coleta cadastrada.")
-        return
-
-    alta = 0
-    media = 0
-    baixa = 0
-
-    for coleta_nova in coletas:
-
-        prioridade_contagem = coleta_nova["prioridade"].lower()
-
-        if prioridade_contagem == "alta":
-
-            alta += 1
-
-        elif prioridade_contagem == "media":
-
-            media += 1
-
-        elif prioridade_contagem == "baixa":
-
-            baixa += 11
-
-    print("\n===== ESTATÍSTICAS =====")
-
-    print(f"\nTotal de coletas: {len(coletas)}")
-    print(f"Prioridade Alta: {alta}")
-    print(f"Prioridade Média: {media}")
-    print(f"Prioridade Baixa: {baixa}")
+# =========================
+# MENU
+# =========================
 
 def menu_coleta():
 
@@ -305,25 +78,307 @@ def menu_coleta():
         opcao = input("Escolha: ")
 
         if opcao == "1":
+
             cadastrar_coleta()
 
         elif opcao == "2":
+
             listar_coletas()
 
         elif opcao == "3":
+
             remover_coleta()
 
         elif opcao == "4":
+
             editar_coleta()
 
         elif opcao == "5":
+
             buscar_coleta()
 
         elif opcao == "6":
+
             mostrar_estatisticas()
 
         elif opcao == "7":
+
             break
 
         else:
-            print("Opção inválida")
+
+            print("\n❌ Opção inválida.")
+
+
+# =========================
+# CADASTRAR COLETA
+# =========================
+
+def cadastrar_coleta():
+
+    print("\n===== CADASTRAR COLETA =====")
+
+    cliente = input("Cliente: ")
+    motorista = input("Motorista: ")
+    placa = input("Placa: ")
+    veiculo = input("Veículo: ")
+
+    prioridade = obter_prioridade()
+
+    horario = input("Horário: ")
+
+    cursor.execute("""
+
+    INSERT INTO coletas (
+        cliente,
+        motorista,
+        placa,
+        veiculo,
+        prioridade,
+        horario
+    )
+
+    VALUES (?, ?, ?, ?, ?, ?)
+
+    """, (
+
+        cliente,
+        motorista,
+        placa,
+        veiculo,
+        prioridade,
+        horario
+
+    ))
+
+    conexao.commit()
+
+    print("\n✅ Coleta cadastrada com sucesso!")
+
+
+# =========================
+# LISTAR COLETAS
+# =========================
+
+def listar_coletas():
+
+    print("\n===== PROGRAMAÇÃO =====")
+
+    coletas = obter_coletas()
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    print(f"\nTotal de coletas: {len(coletas)}")
+
+    for coleta in coletas:
+
+        exibir_coleta(coleta)
+
+
+# =========================
+# REMOVER COLETA
+# =========================
+
+def remover_coleta():
+
+    print("\n===== REMOVER COLETA =====")
+
+    coletas = obter_coletas()
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    listar_ids_coletas(coletas)
+
+    try:
+
+        id_coleta = int(input("\nDigite o ID da coleta: "))
+
+        cursor.execute("""
+
+        SELECT * FROM coletas
+
+        WHERE id = ?
+
+        """, (id_coleta,))
+
+        coleta = cursor.fetchone()
+
+        if coleta is None:
+
+            print("\n❌ Coleta não encontrada.")
+            return
+
+        cursor.execute("""
+
+        DELETE FROM coletas
+
+        WHERE id = ?
+
+        """, (id_coleta,))
+
+        conexao.commit()
+
+        print("\n✅ Coleta removida com sucesso!")
+
+    except ValueError:
+
+        print("\n❌ Digite apenas números.")
+
+
+# =========================
+# EDITAR COLETA
+# =========================
+
+def editar_coleta():
+
+    print("\n===== EDITAR COLETA =====")
+
+    coletas = obter_coletas()
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    listar_ids_coletas(coletas)
+
+    try:
+
+        id_coleta = int(input("\nDigite o ID da coleta: "))
+
+        cursor.execute("""
+
+        SELECT * FROM coletas
+
+        WHERE id = ?
+
+        """, (id_coleta,))
+
+        coleta = cursor.fetchone()
+
+        if coleta is None:
+
+            print("\n❌ Coleta não encontrada.")
+            return
+
+        print("\nDigite os novos dados:")
+
+        cliente = input("Cliente: ")
+        motorista = input("Motorista: ")
+        placa = input("Placa: ")
+        veiculo = input("Veículo: ")
+
+        prioridade = obter_prioridade()
+
+        horario = input("Horário: ")
+
+        cursor.execute("""
+
+        UPDATE coletas
+
+        SET
+            cliente = ?,
+            motorista = ?,
+            placa = ?,
+            veiculo = ?,
+            prioridade = ?,
+            horario = ?
+
+        WHERE id = ?
+
+        """, (
+
+            cliente,
+            motorista,
+            placa,
+            veiculo,
+            prioridade,
+            horario,
+            id_coleta
+
+        ))
+
+        conexao.commit()
+
+        print("\n✅ Coleta atualizada com sucesso!")
+
+    except ValueError:
+
+        print("\n❌ Digite apenas números.")
+
+
+# =========================
+# BUSCAR COLETA
+# =========================
+
+def buscar_coleta():
+
+    print("\n===== BUSCAR COLETA =====")
+
+    busca = input("Digite o nome do cliente: ")
+
+    cursor.execute("""
+
+    SELECT * FROM coletas
+
+    WHERE cliente LIKE ?
+
+    """, (f"%{busca}%",))
+
+    coletas = cursor.fetchall()
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta encontrada.")
+        return
+
+    for coleta in coletas:
+
+        exibir_coleta(coleta)
+
+
+# =========================
+# ESTATÍSTICAS
+# =========================
+
+def mostrar_estatisticas():
+
+    coletas = obter_coletas()
+
+    if len(coletas) == 0:
+
+        print("\n❌ Nenhuma coleta cadastrada.")
+        return
+
+    alta = 0
+    media = 0
+    baixa = 0
+
+    for coleta in coletas:
+
+        prioridade = coleta[5].lower()
+
+        if prioridade == "alta":
+
+            alta += 1
+
+        elif prioridade == "media":
+
+            media += 1
+
+        elif prioridade == "baixa":
+
+            baixa += 1
+
+    print("\n===== ESTATÍSTICAS =====")
+
+    print(f"\nTotal de coletas: {len(coletas)}")
+    print(f"Prioridade Alta: {alta}")
+    print(f"Prioridade Média: {media}")
+    print(f"Prioridade Baixa: {baixa}")

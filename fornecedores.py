@@ -1,24 +1,14 @@
 import requests
 
+# Importação da função Optional que tras os dados do fornecedor via CNPJ pelço api
+
 from typing import Optional
+
+# Importação do databse
 
 from database import conexao, cursor
 
-def consultar_cnpj(cnpj) -> Optional[dict]:
-
-    cnpj = cnpj.replace(".", "")
-    cnpj = cnpj.replace("/", "")
-    cnpj = cnpj.replace("-", "")
-
-    url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
-
-    resposta = requests.get(url)
-
-    if resposta.status_code == 200:
-
-        return resposta.json()
-
-    return None
+# Função do menu de escolha de função do fornecedor
 
 def menu_fornecedor():
 
@@ -64,6 +54,25 @@ def menu_fornecedor():
 
             print("\n❌ Opção inválida.")
 
+# Função de importação dos dados via CNPJ dos fornecedores
+
+def consultar_cnpj(cnpj) -> Optional[dict]:
+
+    cnpj = cnpj.replace(".", "")
+    cnpj = cnpj.replace("/", "")
+    cnpj = cnpj.replace("-", "")
+
+    url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
+
+    resposta = requests.get(url)
+
+    if resposta.status_code == 200:
+
+        return resposta.json()
+
+    return None
+
+# Função de cadastramento de fornecedor
 
 def cadastrar_fornecedor():
 
@@ -119,6 +128,7 @@ def cadastrar_fornecedor():
 
     print("\n✅ Fornecedor cadastrado com sucesso!")
 
+# Função de listar fornecedores cadastrados
 
 def listar_fornecedores():
 
@@ -140,6 +150,8 @@ def listar_fornecedores():
         print(f"Nome: {fornecedor[2]}")
         print(f"Endereço: {fornecedor[3]}")
         print(f"Telefone: {fornecedor[4]}")
+
+# Função de edição dos dados do fornecedor escolhido
 
 def editar_fornecedor():
 
@@ -208,6 +220,8 @@ def editar_fornecedor():
 
         print("\n❌ Digite apenas números.")
 
+# Função de busca de um fornecedor
+
 def buscar_fornecedor():
 
     print("\n===== BUSCAR FORNECEDOR =====")
@@ -236,6 +250,8 @@ def buscar_fornecedor():
         print(f"Nome: {fornecedor[2]}")
         print(f"Endereço: {fornecedor[3]}")
         print(f"Telefone: {fornecedor[4]}")
+
+# Função de remover um fornecedor
 
 def remover_fornecedor():
 

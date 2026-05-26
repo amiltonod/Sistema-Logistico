@@ -1,4 +1,8 @@
+# Importando fuções do módulo de coletas
+
 from coletas import menu_coleta
+
+# Importando funções do módulo de fornecedores
 
 from fornecedores import menu_fornecedor
 
@@ -7,6 +11,7 @@ print("===================================")
 print(" SISTEMA DE PROGRAMAÇÃO LOGÍSTICA ")
 print("===================================")
 
+# Loop para execução do menu principal
 
 while True:
 
