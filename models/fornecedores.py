@@ -1,5 +1,7 @@
 import requests
 
+from utils.cnpj_api import consultar_cnpj
+
 # Importação da função Optional que tras os dados do fornecedor via CNPJ pelço api
 
 from typing import Optional
@@ -54,41 +56,7 @@ def menu_fornecedor():
 
             print("\n❌ Opção inválida.")
 
-# Função de importação dos dados via CNPJ dos fornecedores
 
-def consultar_cnpj(cnpj):
-
-    cnpj = cnpj.replace(".", "")
-    cnpj = cnpj.replace("/", "")
-    cnpj = cnpj.replace("-", "")
-
-    url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
-
-    try:
-
-        resposta = requests.get(url)
-
-        if resposta.status_code == 200:
-
-            return resposta.json()
-
-        elif resposta.status_code == 429:
-
-            print("\n⚠ Muitas consultas realizadas. Tente novamente em alguns minutos.")
-
-            return None
-
-        else:
-
-            print(f"\nErro API: {resposta.status_code}")
-
-            return None
-
-    except Exception as erro:
-
-        print(f"\nErro na conexão: {erro}")
-
-        return None
 
 # Função de cadastramento de fornecedor
 
