@@ -1,10 +1,10 @@
 # Importando fuções do módulo de coletas
 
-from coletas import menu_coleta
+from services.coletas import menu_coleta
 
 # Importando funções do módulo de fornecedores
 
-from fornecedores import menu_fornecedor
+from models.fornecedores import menu_fornecedor
 
 
 print("===================================")

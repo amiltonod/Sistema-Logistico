@@ -1,6 +1,6 @@
 import sqlite3
 
-conexao = sqlite3.connect("logistica.db")
+conexao = sqlite3.connect("database/logistica.db")
 
 cursor = conexao.cursor()
 

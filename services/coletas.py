@@ -1,4 +1,4 @@
-from database import conexao, cursor
+from database.conexao import conexao, cursor
 
 
 # =========================

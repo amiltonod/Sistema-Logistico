@@ -6,7 +6,7 @@ from typing import Optional
 
 # Importação do databse
 
-from database import conexao, cursor
+from database.conexao import conexao, cursor
 
 # Função do menu de escolha de função do fornecedor
 
@@ -56,7 +56,7 @@ def menu_fornecedor():
 
 # Função de importação dos dados via CNPJ dos fornecedores
 
-def consultar_cnpj(cnpj) -> Optional[dict]:
+def consultar_cnpj(cnpj):
 
     cnpj = cnpj.replace(".", "")
     cnpj = cnpj.replace("/", "")
@@ -64,13 +64,31 @@ def consultar_cnpj(cnpj) -> Optional[dict]:
 
     url = f"https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
 
-    resposta = requests.get(url)
+    try:
 
-    if resposta.status_code == 200:
+        resposta = requests.get(url)
 
-        return resposta.json()
+        if resposta.status_code == 200:
 
-    return None
+            return resposta.json()
+
+        elif resposta.status_code == 429:
+
+            print("\n⚠ Muitas consultas realizadas. Tente novamente em alguns minutos.")
+
+            return None
+
+        else:
+
+            print(f"\nErro API: {resposta.status_code}")
+
+            return None
+
+    except Exception as erro:
+
+        print(f"\nErro na conexão: {erro}")
+
+        return None
 
 # Função de cadastramento de fornecedor
 
@@ -304,3 +322,4 @@ def remover_fornecedor():
     except ValueError:
 
         print("\n❌ Digite apenas números.")
+
