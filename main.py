@@ -6,6 +6,10 @@ from services.coletas import menu_coleta
 
 from models.fornecedores import menu_fornecedor
 
+# Importando funções do módulo de credores
+
+from models.credores import menu_credor
+
 
 print("===================================")
 print(" SISTEMA DE PROGRAMAÇÃO LOGÍSTICA ")
@@ -18,7 +22,8 @@ while True:
     print("\n===== MENU PRINCIPAL =====")
     print("1 - Coletas")
     print("2 - Fornecedores")
-    print("3 - Sair")
+    print("3 - Credores")
+    print("4 - Sair")
 
     opcao = input("Escolha uma opção: ")
 
@@ -31,6 +36,10 @@ while True:
         menu_fornecedor()
 
     elif opcao == "3":
+
+        menu_credor()
+
+    elif opcao == "4":
 
         print("\nSistema encerrado.")
         break

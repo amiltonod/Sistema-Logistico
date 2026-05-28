@@ -36,3 +36,19 @@ CREATE TABLE IF NOT EXISTS fornecedores (
 """)
 
 conexao.commit()
+
+cursor.execute("""
+
+CREATE TABLE IF NOT EXISTS credores (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cnpj TEXT,
+    nome TEXT,
+    endereco TEXT,
+    telefone TEXT
+
+)
+
+""")
+
+conexao.commit()

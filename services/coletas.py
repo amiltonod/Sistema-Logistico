@@ -1,6 +1,5 @@
 from database.conexao import conexao, cursor
 
-
 # =========================
 # FUNÇÕES AUXILIARES
 # =========================
