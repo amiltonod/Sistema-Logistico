@@ -46,7 +46,7 @@ O projeto está evoluindo progressivamente como parte do meu aprendizado prátic
 * SQL
 * Requests
 * API de CNPJ
-* PyCharm
+* VS Code
 * Git/GitHub
 
 ---
