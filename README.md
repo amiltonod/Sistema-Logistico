@@ -10,32 +10,32 @@ O projeto está evoluindo progressivamente como parte do meu aprendizado prátic
 
 ## 🚚 Coletas
 
-✅ Cadastro de coletas
-✅ Listagem de programação
-✅ Busca de coletas
-✅ Edição de coletas
-✅ Remoção de coletas
-✅ Estatísticas operacionais
+✅ Cadastro de coletas  
+✅ Listagem de programação  
+✅ Busca de coletas  
+✅ Edição de coletas  
+✅ Remoção de coletas  
+✅ Estatísticas operacionais  
 
 ---
 
 ## 🏢 Fornecedores
 
-✅ Cadastro de fornecedores
-✅ Busca de fornecedores
-✅ Edição de fornecedores
-✅ Remoção de fornecedores
-✅ Integração automática via API de CNPJ
+✅ Cadastro de fornecedores  
+✅ Busca de fornecedores  
+✅ Edição de fornecedores  
+✅ Remoção de fornecedores  
+✅ Integração automática via API de CNPJ  
 
 ---
 
 ## 💰 Credores
 
-✅ Cadastro de credores
-✅ Busca de credores
-✅ Edição de credores
-✅ Remoção de credores
-✅ Integração automática via API de CNPJ
+✅ Cadastro de credores  
+✅ Busca de credores  
+✅ Edição de credores  
+✅ Remoção de credores  
+✅ Integração automática via API de CNPJ  
 
 ---
 
